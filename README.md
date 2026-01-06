@@ -41,3 +41,24 @@ flowchart TD
     SYM --> RULES[Rule-Based Diagnostic Engine]
     SENS --> RULES
     RULES --> A2[Final Diagnosis<br/>(Cause + Action)]
+```
+aura-chatbot-anshima/
+│
+├── backend/
+│   ├── main.py
+│   ├── llm/
+│   │   ├── rag_engine.py
+│   │   └── groq_client.py
+│   ├── data/
+│   │   ├── agricultural_knowledge_base.json
+│   │   ├── diagnostic_rules.json
+│   │   └── sample_farm_data.json
+│   ├── setup_rag.py
+│   └── requirements.txt
+│
+├── frontend/
+│   └── index.html
+│
+├── .env
+├── .gitignore
+└── README.md
