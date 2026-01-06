@@ -715,9 +715,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- GitHub: [[@yourusername]([https://github.com/yourusername](https://github.com/anshima-tripathi))]
+- Email: anshimatripathi2003@gmail.com
+
 
 ## 🙏 Acknowledgments
 
@@ -727,13 +727,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ChromaDB developers
 - Agricultural experts who contributed to the knowledge base
 
-## 📞 Support
 
-For questions or issues:
-- 📧 Email: support@aura-chatbot.com
-- 💬 Discord: [Join Server](your-discord-link)
-- 📚 Documentation: [Wiki](your-wiki-link)
-
----
 
 **Built with ❤️ for farmers by developers**
