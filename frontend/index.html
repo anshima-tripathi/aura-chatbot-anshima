@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AURA AI Agronomist</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #2c7a7b;
+      text-align: center;
+    }
+
+    .status {
+      text-align: center;
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+
+    .card {
+      background: #fff;
+      padding: 16px;
+      margin: 12px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 12px;
+      background: #2c7a7b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #225e61;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+    }
+
+    .error { color: red; }
+    .ok { color: green; }
+
+    pre {
+      background: #eef2f7;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🌱 AURA AI Agronomist</h1>
+
+<div class="status" id="status">Status: Idle</div>
+
+<button onclick="loadData()">Fetch Farm 102 Data</button>
+
+<div class="card">
+  <h3>📡 Sensor Data</h3>
+  <ul id="sensors">—</ul>
+</div>
+
+<div class="card">
+  <h3>🧠 Diagnosis</h3>
+  <pre id="diagnosis">—</pre>
+</div>
+
+<div class="card">
+  <h3>📘 Crop Knowledge (Lettuce)</h3>
+  <pre id="knowledge">—</pre>
+</div>
+
+<div class="card">
+  <h3>💬 Ask the Agronomist</h3>
+
+  <input id="farmId" value="farm_102" />
+  <input id="crop" value="lettuce" />
+  <textarea id="question" placeholder="Ask about EC, pH, temperature…"></textarea>
+
+  <button onclick="askAgronomist()">Ask</button>
+
+  <pre id="chatResponse">—</pre>
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:8000";
+
+const statusEl = document.getElementById("status");
+const sensorsEl = document.getElementById("sensors");
+const diagnosisEl = document.getElementById("diagnosis");
+const knowledgeEl = document.getElementById("knowledge");
+const chatResponseEl = document.getElementById("chatResponse");
+
+async function loadData() {
+  statusEl.textContent = "Status: Loading…";
+
+  try {
+    const sensors = await fetch(`${BASE_URL}/api/farms/farm_102/sensors`).then(r => r.json());
+    const diagnosis = await fetch(`${BASE_URL}/api/diagnose/farm_102`, { method: "POST" }).then(r => r.json());
+    const knowledge = await fetch(`${BASE_URL}/api/knowledge/lettuce`).then(r => r.json());
+
+    renderSensors(sensors);
+    renderDiagnosis(diagnosis);
+    renderKnowledge(knowledge);
+
+    statusEl.textContent = "Status: Loaded ✅";
+    statusEl.className = "status ok";
+  } catch (e) {
+    console.error(e);
+    statusEl.textContent = "Status: Backend error ❌";
+    statusEl.className = "status error";
+  }
+}
+
+function renderSensors(d) {
+  sensorsEl.innerHTML = `
+    <li>🌡 Temperature: ${d.temperature} °C</li>
+    <li>💧 Humidity: ${d.humidity} %</li>
+    <li>🧪 EC: ${d.ec}</li>
+    <li>⚗ pH: ${d.ph}</li>
+    <li>💡 PPFD: ${d.ppfd}</li>
+  `;
+}
+
+function renderDiagnosis(d) {
+  diagnosisEl.textContent = JSON.stringify(d, null, 2);
+}
+
+function renderKnowledge(d) {
+  knowledgeEl.textContent = JSON.stringify(d, null, 2);
+}
+
+async function askAgronomist() {
+  const payload = {
+    farm_id: document.getElementById("farmId").value,
+    crop: document.getElementById("crop").value,
+    question: document.getElementById("question").value
+  };
+
+  const res = await fetch(`${BASE_URL}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  chatResponseEl.textContent = data.answer;
+}
+async function sendMessage() {
+  const msg = input.value;
+  const farmId = document.getElementById("farmSelect").value;
+
+  let url = "http://127.0.0.1:8000/api/chat";
+  if (farmId) {
+    url += `?farm_id=${farmId}`;
+  }
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: msg })
+  });
+
+  const data = await res.json();
+  addMessage(data.reply);
+}
+
+</script>
+
+</body>
+</html>
