@@ -42,7 +42,7 @@ flowchart TD
     SENS --> RULES
     RULES --> A2[Final Diagnosis<br/>(Cause + Action)]
 ```
-aura-chatbot-anshima/
+### aura-chatbot-anshima/
 │
 ├── backend/
 │   ├── main.py
